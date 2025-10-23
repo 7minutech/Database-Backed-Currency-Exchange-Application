@@ -1,43 +1,27 @@
-form {
+fieldset {
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 20px;
 }
-button{
+
+#convert_button {
     padding: 5px;
-    margin-top: 5px;
+    text-align: center;
+    background-color: #94be94;
+    border-radius: 5px;
 }
-.container{
-    display: flex;
-    flex-direction: column;
+
+#convert_button:enabled:hover {
+    background-color: #bbcebb;
 }
-.attendee_info_container{
-    width: 25%;
-    display: flex;
-    justify-content: space-between;
-    border: 2px solid;
-    padding: 10px;
+
+#convert_button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+
 }
-.attendee_info_container > * {
-    flex: 1;
-}
-.session_container{
-    flex: 3;
-}
-.sessions{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-.sessions > *{
-    flex: 1;
-}
-.registration_buttons{
-    margin-top: 20px;
-    display: flex;
-    gap: 25px;
-}
-#attending_table{
-    padding: 10px;
+
+label {
+    padding: 5px;
 }

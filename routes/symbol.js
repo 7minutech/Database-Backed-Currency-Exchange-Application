@@ -3,14 +3,20 @@ const router = express.Router();
 import { db } from "../store/db.js"
 
 router.get('/', (req, resp) => {
-    db.all(`SELECT _id FROM currency`, (err, rows) => {
+    db.all(`SELECT * FROM currency`, (err, rows) => {
         if (err) {
             console.error(err.message);
         }
         if (!rows){
             return resp.status(500).json({ error: "Coundn't fetch currency symbols"});
         }
-        resp.json(rows)
+        var symbols = {}
+        rows.forEach(row => {
+            let symbol = row._id
+            let desc = row.description     
+            symbols[symbol] = desc
+        });
+        resp.json(symbols)
     });
 });
 
