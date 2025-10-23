@@ -3,17 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS 415 Lab #3</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="scripts/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="scripts/symbols.js"></script>
+    <script type="text/javascript" src="scripts/script.js"></script>
     <title>Document</title>
-    <script type="text/javascript" src="../public/jquery-3.7.1.min.js"></script>
-    <script type="text/javascript" src="../public/script.js"></script>
-
 </head>
 <body>
-    <h1>Regstration Desk</h1>
-    <nav>
-        <a href="/attendees/new">New Attendee Registration</a>
-        <a href="/attendees/registration/edit">Session Management</a>
-        <a href="/attendees/edit">Attendee Management</a>
-    </nav>
+    <form action="" id="currency_form">
+        <fieldset>
+            <legend>Currency Calculator</legend>
+            <div class="container">
+                <label for="target_currency">Convert to</label>
+                <select name="target_currency" id="target_currency">
+                </select>
+            </div>
+            <div class="container">
+                <label for="usd_value">Value (in USD)</label>
+                <input name="usd_value" type="number" id="usd_value">
+                <label for="date_value">Date: </label>
+                <input name="date_value" type="date" id="date_value">
+            </div>
+            <div class="container">
+                <button id="convert_button">Convert</button>
+            </div>
+        </fieldset>
+    </form>
+    <div class="output">
+        
+    </div>
 </body>
 </html>
+
+
