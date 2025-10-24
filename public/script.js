@@ -1,6 +1,3 @@
-
-const API_KEY = "dOeYwAl4A1IG4D8lZ9uuBRNv4p0DPkMb"
-
 function add_target_currencies(symbols) {
     let $select = $("#target_currency");
     for (const [key, value] of Object.entries(symbols)){
@@ -13,20 +10,29 @@ function add_target_currencies(symbols) {
     }
 }
 
-function add_result(amount, result, to, date) {
-    let usd_value_string = (amount).toLocaleString('en-US', {
+function add_result(resp) {
+    let usd_value_str = (resp.query.amount).toLocaleString('en-US', {
         style: 'currency',
-        currency: 'USD',
+        currency: resp.query.to,
     });
-    let result_value_string = (result).toLocaleString('en-US', {
+
+    if (!(resp.success)){
+        console.log(`error: converted currecny response: ${resp}`);
+    }
+
+    let result_value_str = (resp.result).toLocaleString('en-US', {
         style: 'currency',
-        currency: to,
+        currency: resp.query.from,
     });
-    let $output = $(".output");
-    let $p = $("<p></p>").text(`The equivalent of ${usd_value_string} in ${to} for the date ${date} is ${result_value_string}`);
-    $output.append($p);
-    $("#convert_button").prop('disabled', false);
+    let conversion_msg = `The equivalent of ${usd_value_str} in ${resp.query.from} for the date ${resp.date} is ${result_value_str}`
+    show_conversion_result(conversion_msg)
    
+}
+
+function show_conversion_result(msg) {
+    let $output = $(".output");
+    let $p = $("<p></p>").text(msg);
+    $output.append($p);
 }
 
 $(function() {
@@ -61,7 +67,7 @@ function fetch_api_conversion({amount, from, to, date}) {
             "apikey": API_KEY
         },
         success: function(response) {
-            add_result(amount, response["result"], to, date)
+            add_result(response)
         }
     })
 }
@@ -80,24 +86,6 @@ function fetch_symbols(){
     })
 }
 
-/*
-{
-    "success": true,
-    "query": {
-        "from": "USD",
-        "to": "GBP",
-        "amount": 7
-    },
-    "info": {
-        "timestamp": 1761251115,
-        "rate": 0.750635
-    },
-    "date": "2025-10-23",
-    "result": 5.254445
-}
-
-*/
-
 function fetch_conversion({amount, from, to, date}){
     let params = `to=${to}&from=${from}&amount=${amount}`
     if (date) {
@@ -108,10 +96,18 @@ function fetch_conversion({amount, from, to, date}){
         method: "GET",
         dataType: "json",
         success: function(response) {
-            add_result(amount, response["result"], to, date)
+            add_result(response)
+            $("#convert_button").prop('disabled', false); 
+
         },
         error: function(xhr, status, error){
-            console.log(error)
+            let selectedDate = date
+            if (!(selectedDate)){
+                selectedDate = today = new Date().toISOString().substring(0,10);   
+            }
+            alert(`error converting ${from} to ${to} on ${selectedDate}`)
+            console.log(`error converting ${from} to ${to} on ${selectedDate}: ${error}`)
+            $("#convert_button").prop('disabled', false); 
         }
     })
 }
