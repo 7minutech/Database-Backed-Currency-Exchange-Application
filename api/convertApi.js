@@ -33,7 +33,8 @@ const convertOptions = {
 };
 
 function addParamsToOptions(options, params){
-    let queryParams = `to=${params.to}&from=${params.from}&amount=${params.amount}&date=${params.date}`
+    const { to, from, amount, date } = params; 
+    let queryParams = `to=${to}&from=${from}&amount=${amount}&date=${date}`
     let options = convertOptions
     options.path += queryParams
     return convertOptions
