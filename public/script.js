@@ -26,7 +26,7 @@ function add_result(resp) {
         style: 'currency',
         currency: resp.query.from,
     });
-    let conversion_msg = `The equivalent of ${usd_value_str} in ${resp.query.from} for the date ${resp.date} is ${result_value_str}`
+    let conversion_msg = `The equivalent of $${usd_value_str} in ${resp.query.from} for the date ${resp.date} is ${result_value_str}`
     show_conversion_result(conversion_msg)
    
 }
