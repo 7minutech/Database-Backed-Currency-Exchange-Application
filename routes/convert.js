@@ -16,7 +16,7 @@ router.get('/', (req, resp) => {
     if (!(to) || !(from) || !(amount)){
         resp.status(400).json(conversionResp(to, from, amount, result, selectedDate, false))
     }
-    fetchRate(resp, req.query)
+    fetchRate(resp, req.query, true)
 });
 
 export default router;
