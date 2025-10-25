@@ -34,7 +34,7 @@ export function fetchRate(resp, params, success){
             return;
         }
         if (!row){
-            fetchExchangeRate(addParamsToOptions(params), insertRate, resp, params)
+            fetchExchangeRate(addParamsToOptions(params), insertRates, resp, params)
             return;
         }
         let result = row.rate * amount
@@ -42,9 +42,8 @@ export function fetchRate(resp, params, success){
     });
 }
 
-export function insertRate(err, data, resp, params){
+export function insertRates(err, data, resp, params){
     const { to, from, amount, date } = params; 
-    data = rates_db;
     if (err){
         console.error("error: fetching conversion from api")
         return
@@ -57,16 +56,24 @@ export function insertRate(err, data, resp, params){
         fetchRate(resp, params, false)
         return
     }
+    var rates = rates_db.rates
     let symbol = to;
     let rate = data.rates[symbol];
     let queryDate = data.date;
     console.log(symbol, rate, queryDate)
-    db.run(`INSERT INTO rate(currency_id, date, rate) VALUES(?, ?, ?)`, [symbol, queryDate, rate], (err) => {
+    var insertRate = `INSERT INTO rate(currency_id, date, rate) VALUES(?, ?, ?)`;
+    var statement = db.prepare(insertRate)
+    for (let symbol in rates) {
+        console.log(`${symbol}: ${rates[symbol]}`)
+        statement.run(symbol, queryDate, rates[symbol])
+    }
+    statement.finalize((err) => {
         if (err) {
             console.error(err.message);
-        } 
+            fetchRate(resp, params, false);
+        }
         else {
-            console.log(`Rows updated: ${symbol} | ${rate} | ${queryDate}`);
+            console.log(`Rows updated for: ${queryDate}`);
             fetchRate(resp, params, true)
         }
     });
