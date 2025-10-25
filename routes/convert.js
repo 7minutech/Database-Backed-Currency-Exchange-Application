@@ -14,9 +14,8 @@ router.get('/', (req, resp) => {
         selectedDate = date
     }
     if (!(to) || !(from) || !(amount)){
-        resp.json(conversionResp(to, from, amount, result, selectedDate, false))
+        resp.status(400).json(conversionResp(to, from, amount, result, selectedDate, false))
     }
-
     fetchRate(resp, req.query)
 });
 
