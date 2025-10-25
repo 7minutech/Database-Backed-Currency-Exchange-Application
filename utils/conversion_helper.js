@@ -20,6 +20,8 @@ export function conversionResp(from, to, amount, rate, date, success){
 
 export function fetchRate(resp, params, success){
     const { to, from, amount, date } = params; 
+    const today = new Date();
+    let givenDate = new Date(date)
 
     db.get(`SELECT rate FROM rate where currency_id = ? AND date = ?`, [to, date], (err, row) => {
         if (err) {
@@ -34,6 +36,10 @@ export function fetchRate(resp, params, success){
             return;
         }
         if (!row){
+            if (givenDate > today) {
+                resp.status(400).json(conversionResp(to, from, amount, undefined, date, false));
+                return;
+            }
             fetchExchangeRate(addParamsToOptions(params), insertRates, resp, params)
             return;
         }
@@ -56,7 +62,7 @@ export function insertRates(err, data, resp, params){
         fetchRate(resp, params, false)
         return
     }
-    var rates = rates_db.rates
+    var rates = data.rates
     let symbol = to;
     let rate = data.rates[symbol];
     let queryDate = data.date;
@@ -64,7 +70,7 @@ export function insertRates(err, data, resp, params){
     var insertRate = `INSERT INTO rate(currency_id, date, rate) VALUES(?, ?, ?)`;
     var statement = db.prepare(insertRate)
     for (let symbol in rates) {
-        console.log(`${symbol}: ${rates[symbol]}`)
+        // console.log(`${symbol}: ${rates[symbol]}`)
         statement.run(symbol, queryDate, rates[symbol])
     }
     statement.finalize((err) => {
