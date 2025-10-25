@@ -18,6 +18,8 @@ function add_result(resp) {
 
     if (!(resp.success)){
         console.log(`error: converted currecny response: ${resp}`);
+        alert(`error converting ${resp.query.from} to ${resp.query.to} on ${resp.date}`)
+        return
     }
 
     let result_value_str = (resp.result).toLocaleString('en-US', {
