@@ -1,6 +1,8 @@
 import http from 'node:http';
 import { Buffer } from 'node:buffer';
 const API_KEY = "dOeYwAl4A1IG4D8lZ9uuBRNv4p0DPkMb"
+// const API_KEY = "XPfkMH03atKVlcNbKZiFLN4DEbh7NYC1"
+
 
 /*
 function fetch_api_conversion({amount, from, to, date}) {
@@ -20,27 +22,42 @@ function fetch_api_conversion({amount, from, to, date}) {
         }
     })
 }
+
+{
+{
+  "success": true,
+  "timestamp": 1719408000,
+  "base": "EUR",
+  "date": "2024-06-26",
+  "rates": {
+    "USD": 1.0712,
+    "GBP": 0.8473,
+    "JPY": 171.55
+  }
+}
 */
 
-const convertOptions = {
-    hostname: 'api.apilayer.com',
-    path: '/exchangerates_data/convert?',
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-        "apikey": API_KEY
-    }
-};
 
-function addParamsToOptions(options, params){
+
+export function addParamsToOptions(params){
     const { to, from, amount, date } = params; 
     let queryParams = `to=${to}&from=${from}&amount=${amount}&date=${date}`
-    let options = convertOptions
-    options.path += queryParams
+
+    let convertOptions = {
+        hostname: 'api.apilayer.com',
+        path: '/exchangerates_data/convert?',
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            "apikey": API_KEY
+        }
+    };
+
+    convertOptions.path += queryParams
     return convertOptions
 }
 
-function fetchExchangeRate(options, callback){
+export function fetchExchangeRate(options, callback, resp, params){
     const req = http.request(options, (res) => {
         let chunks = [];
         console.log(`Status: ${res.statusCode}`);
@@ -51,11 +68,11 @@ function fetchExchangeRate(options, callback){
         res.on('end', () => {
             let json = JSON.parse(chunks.join());
             console.log('Record(s): ' + json.length);
-            callback(null, json);
+            callback(null, json, resp, params);
         });
 
         req.on('error', (e) => { callback(true, null); });
+    });
+    req.end();
 
-        req.end();
-    })
 }
