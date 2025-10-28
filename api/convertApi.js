@@ -5,6 +5,7 @@ const API_KEY = "XPfkMH03atKVlcNbKZiFLN4DEbh7NYC1"
 
 export function addParamsToOptions(params){
     const { date } = params; 
+    const baseParam = "base=USD"
 
     let convertOptions = {
         hostname: 'api.apilayer.com',
@@ -15,8 +16,7 @@ export function addParamsToOptions(params){
             "apikey": API_KEY
         }
     };
-
-    convertOptions.path += date
+    convertOptions.path += date + "?" + baseParam
     return convertOptions
 }
 
