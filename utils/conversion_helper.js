@@ -3,9 +3,8 @@ import { fetchExchangeRate, addParamsToOptions } from '../api/convertApi.js';
 import { rates_db } from "../store/lab3_rates_20250911.js"
 
 
-export function conversionResp(from, to, amount, rate, date, success){
+export function conversionResp(from, to, amount, result, date, success){
     const today = new Date();
-    let result = amount * rate
     return {
         success: success,
         query: {
